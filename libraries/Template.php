@@ -38,7 +38,8 @@ class Template {
     var $template;
     var $master;
     var $regions = array(
-      '_scripts' => array(),
+      '_header_scripts' => array(),
+      '_footer_scripts' => array(),
       '_styles' => array(),
       '_metas'  => array(),
     );
@@ -204,7 +205,8 @@ class Template {
       if (count($regions))
       {
          $this->regions = array(
-            '_scripts' => array(),
+            '_header_scripts' => array(),
+            '_footer_scripts' => array(),
             '_styles' => array(),
             '_metas'    => array(),
          );
@@ -431,12 +433,13 @@ class Template {
     * @access  public
     * @param   string   script to import or embed
     * @param   string  'import' to load external file or 'embed' to add as-is
+    * @param   string   script location
     * @param   boolean  TRUE to use 'defer' attribute, FALSE to exclude it
     * @param   boolean  TRUE to use 'version' attribute, FALSE to exclude it
     * @return  Template
     */
 
-    function add_js($script, $type = 'import', $defer = FALSE, $version = FALSE)
+    function add_js($script, $type = 'import', $location = 'header', $defer = FALSE, $version = FALSE)
     {
 
       $js = NULL;
@@ -492,7 +495,16 @@ class Template {
       if ($js != NULL && !in_array($js, $this->js))
       {
          $this->js[] = $js;
-         $this->write('_scripts', $js);
+         if ( $location == 'header' )
+         {
+            $this->write('_header_scripts', $js);
+         }
+
+         if ( $location == 'footer' )
+         {
+            $this->write('_footer_scripts', $js);
+         }
+         
       }
       
       return $this;
